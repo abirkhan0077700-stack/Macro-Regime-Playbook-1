@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>2026 Macro Ticker Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#0a0c0f;color:#c9d1d9;min-height:100vh;font-size:13px}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* HEADER */
+.header{background:#0d1117;border-bottom:1px solid #21262d;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#58a6ff;letter-spacing:.05em}
+.logo span{color:#3d444d}
+.regime-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.regime-liquidity{background:#1c1a00;color:#e3b341;border:1px solid #3d2f00}
+.regime-energy{background:#1c0a00;color:#f85149;border:1px solid #5c1a00}
+.regime-relief{background:#001c09;color:#3fb950;border:1px solid #003d14}
+.regime-fiscal{background:#1a001c;color:#bc8cff;border:1px solid #3a0042}
+.regime-neutral{background:#161b22;color:#8b949e;border:1px solid #30363d}
+.pulse{width:7px;height:7px;border-radius:50%;animation:pulseAnim 2s infinite;flex-shrink:0}
+.pulse-yellow{background:#e3b341;box-shadow:0 0 6px #e3b341}
+.pulse-red{background:#f85149;box-shadow:0 0 6px #f85149}
+.pulse-green{background:#3fb950;box-shadow:0 0 6px #3fb950}
+.pulse-purple{background:#bc8cff;box-shadow:0 0 6px #bc8cff}
+.pulse-gray{background:#8b949e}
+@keyframes pulseAnim{0%,100%{opacity:1}50%{opacity:.35}}
+.timestamp{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#484f58}
+
+/* LAYOUT */
+.main-grid{display:grid;grid-template-columns:1fr 320px;min-height:calc(100vh - 53px)}
+.left-panel{border-right:1px solid #21262d;min-width:0}
+.right-panel{display:flex;flex-direction:column;min-width:0}
+
+/* SECTION HEADER */
+.section-header{padding:10px 16px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#484f58;letter-spacing:.1em;text-transform:uppercase}
+.section-label-active{color:#58a6ff}
+
+/* TICKER GRID */
+.ticker-grid{display:grid;grid-template-columns:repeat(5,1fr)}
+.ticker-card{border-right:1px solid #21262d;border-bottom:1px solid #21262d;padding:12px 14px;cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
+.ticker-card:hover,.ticker-card.active{background:#161b22}
+.ticker-card.active::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#58a6ff}
+.ticker-card:nth-child(5n){border-right:none}
+.ticker-sym{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#e6edf3;margin-bottom:2px}
+.ticker-name{font-size:10px;color:#484f58;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ticker-price{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#e6edf3}
+.ticker-change{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-top:2px}
+.up{color:#3fb950}.down{color:#f85149}.flat{color:#8b949e}
+
+/* REGIME MATRIX */
+.regime-matrix{padding:14px 16px;border-bottom:1px solid #21262d}
+.matrix-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.signal-box{background:#161b22;border:1px solid #21262d;border-radius:6px;padding:10px;text-align:center}
+.signal-ticker{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#8b949e}
+.signal-arrow{font-size:20px;margin:4px 0}
+.signal-status{font-size:9px;color:#484f58;letter-spacing:.05em;text-transform:uppercase}
+
+/* INSIGHTS */
+.insights-section{padding:14px 16px;border-bottom:1px solid #21262d}
+.insight-card{background:#161b22;border:1px solid #21262d;border-radius:6px;padding:12px;margin-bottom:8px;display:flex;gap:10px}
+.insight-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-weight:600}
+.insight-critical{background:#2d1b1b;color:#f85149;border:1px solid #5c1a00}
+.insight-warning{background:#1c1a00;color:#e3b341;border:1px solid #3d2f00}
+.insight-info{background:#001c35;color:#58a6ff;border:1px solid #003d6b}
+.insight-title{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#e6edf3;margin-bottom:4px}
+.insight-body{font-size:11px;color:#8b949e;line-height:1.5}
+
+/* CORRELATION */
+.corr-section{padding:12px 16px;border-bottom:1px solid #21262d}
+.corr-cell{border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:600;cursor:default;width:28px;height:22px}
+
+/* FLASH ALERT */
+.flash-alert{background:#1c0a00;border:1px solid #f85149;border-radius:6px;padding:10px 14px;margin:10px 16px;display:flex;align-items:flex-start;gap:8px;animation:flashPulse 2s infinite}
+@keyframes flashPulse{0%,100%{border-color:#f85149}50%{border-color:#5c1a00}}
+.alert-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#f85149;font-weight:600;letter-spacing:.1em}
+.alert-text{font-size:10px;color:#c9d1d9;margin-top:2px;line-height:1.4}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:1px solid #21262d;padding:0 16px}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#484f58;padding:8px 12px;cursor:pointer;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.08em;transition:color .15s;white-space:nowrap}
+.tab.active{color:#58a6ff;border-bottom-color:#58a6ff}
+.tab:hover{color:#8b949e}
+
+/* NEWS WIRE */
+.news-feed{overflow-y:auto;max-height:500px}
+.news-item{padding:12px 16px;border-bottom:1px solid #21262d;cursor:pointer;transition:background .1s}
+.news-item:hover{background:#161b22}
+.news-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+.news-source{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#484f58;text-transform:uppercase;letter-spacing:.08em}
+.news-cat{font-size:9px;padding:1px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.cat-geo{background:#1c0a00;color:#f85149}
+.cat-cb{background:#001c35;color:#58a6ff}
+.cat-credit{background:#1a001c;color:#bc8cff}
+.cat-energy{background:#1c1000;color:#e3b341}
+.news-headline{font-size:11px;color:#c9d1d9;line-height:1.5;margin-bottom:3px}
+.news-sentiment{font-size:9px}
+.risk-on{color:#3fb950}.risk-off{color:#f85149}.neutral-s{color:#8b949e}
+
+/* CHOKEPOINT MAP */
+.chokepoint-map{padding:14px 16px}
+
+/* SCENARIOS */
+.scenario-box{background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:14px;margin:12px 16px}
+.scenario-title{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#484f58;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.scenario-item{display:flex;gap:8px;margin-bottom:8px;font-size:11px;line-height:1.5;padding-bottom:8px;border-bottom:1px solid #21262d}
+.scenario-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.scenario-if{color:#e3b341;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;flex-shrink:0;padding-top:2px}
+.scenario-then{color:#8b949e}
+.scenario-cond{color:#e6edf3;font-weight:500}
+
+/* VOLATILITY */
+.volatility-section{padding:14px 16px}
+.vol-bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vol-sym{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8b949e;width:36px}
+.vol-track{flex:1;height:5px;background:#21262d;border-radius:2px;position:relative}
+.vol-fill{height:100%;border-radius:2px;transition:width .3s}
+.vol-avg-line{position:absolute;top:-3px;width:1px;height:11px;background:#484f58}
+.vol-val{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#484f58;width:32px;text-align:right}
+
+/* FOOTER */
+.footer{background:#0d1117;border-top:1px solid #21262d;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer-note{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#484f58}
+.footer-link{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#58a6ff;text-decoration:none}
+.footer-link:hover{text-decoration:underline}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .main-grid{grid-template-columns:1fr}
+  .right-panel{border-top:1px solid #21262d}
+  .ticker-grid{grid-template-columns:repeat(5,1fr)}
+}
+@media(max-width:640px){
+  .ticker-grid{grid-template-columns:repeat(2,1fr)}
+  .ticker-card:nth-child(5n){border-right:1px solid #21262d}
+  .ticker-card:nth-child(2n){border-right:none}
+  .matrix-grid{grid-template-columns:repeat(2,1fr)}
+  .header-left{flex-direction:column;align-items:flex-start;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo mono">MACRO<span>/</span>TICKER <span>//</span> 2026</div>
+    <div class="regime-badge regime-neutral" id="regime-badge">
+      <div class="pulse pulse-gray" id="regime-pulse"></div>
+      <span id="regime-text">LOADING...</span>
+    </div>
+    <div id="alert-indicator" style="display:none;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#f85149;animation:pulseAnim 1.5s infinite;letter-spacing:.05em;">⬤ SUPPLY CHAIN ALERT</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="timestamp" id="data-note">SIMULATED DATA — WIRE LIVE API FOR PRODUCTION</div>
+    <div class="timestamp" id="timestamp">--:--:-- UTC</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-grid">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+
+    <!-- TICKER GRID -->
+    <div class="section-header">
+      <span class="section-label section-label-active">TICKER GRID — 10 INSTRUMENTS</span>
+      <span class="section-label">1D CHANGE</span>
+    </div>
+    <div class="ticker-grid" id="ticker-grid"></div>
+
+    <!-- REGIME MATRIX -->
+    <div class="regime-matrix">
+      <div class="section-header" style="padding:0 0 10px;border-bottom:1px solid #21262d;margin-bottom:12px">
+        <span class="section-label section-label-active">REGIME DETECTION MATRIX</span>
+        <span class="section-label" id="regime-confidence">CONFIDENCE: HIGH</span>
+      </div>
+      <div class="matrix-grid" id="matrix-grid"></div>
+    </div>
+
+    <!-- INSIGHT ENGINE -->
+    <div class="insights-section">
+      <div class="section-header" style="padding:0 0 10px;border-bottom:1px solid #21262d;margin-bottom:12px">
+        <span class="section-label section-label-active">CAUSAL CHAIN — INSIGHT ENGINE</span>
+      </div>
+      <div id="insights-container"></div>
+    </div>
+
+    <!-- CORRELATION HEATMAP -->
+    <div class="corr-section">
+      <div class="section-label" style="margin-bottom:10px">CORRELATION HEATMAP (30D TRAILING)</div>
+      <div style="overflow-x:auto">
+        <div id="corr-labels" style="display:flex;gap:3px;margin-bottom:3px;padding-left:38px"></div>
+        <div id="corr-rows"></div>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:8px;font-size:9px;color:#484f58">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#3fb950;display:inline-block;border-radius:1px"></span>Strong positive</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#21262d;display:inline-block;border-radius:1px"></span>Neutral</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#f85149;display:inline-block;border-radius:1px"></span>Strong negative</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <div id="flash-alert-container"></div>
+
+    <div class="tab-bar">
+      <div class="tab active" data-tab="wire" onclick="switchTab('wire')">MACRO WIRE</div>
+      <div class="tab" data-tab="map" onclick="switchTab('map')">CHOKEPOINTS</div>
+      <div class="tab" data-tab="scenarios" onclick="switchTab('scenarios')">IF/THEN</div>
+      <div class="tab" data-tab="vol" onclick="switchTab('vol')">VOLATILITY</div>
+    </div>
+
+    <!-- WIRE TAB -->
+    <div id="tab-wire">
+      <div class="news-feed" id="news-feed"></div>
+    </div>
+
+    <!-- MAP TAB -->
+    <div id="tab-map" style="display:none">
+      <div class="chokepoint-map">
+        <div class="section-label" style="margin-bottom:10px">MARITIME CHOKEPOINTS — RISK STATUS</div>
+        <svg viewBox="0 0 300 185" width="100%" style="background:#0d1117;border-radius:6px;border:1px solid #21262d;display:block">
+          <style>.sea{fill:#0d1a2d}.land{fill:#1a2030;stroke:#21262d;stroke-width:.5}.cpl{font-size:7px;font-family:'IBM Plex Mono',monospace}</style>
+          <rect width="300" height="185" class="sea"/>
+          <!-- Simplified continents -->
+          <ellipse cx="75" cy="55" rx="52" ry="28" class="land"/>
+          <ellipse cx="195" cy="45" rx="68" ry="32" class="land"/>
+          <ellipse cx="155" cy="115" rx="38" ry="18" class="land"/>
+          <ellipse cx="248" cy="128" rx="33" ry="22" class="land"/>
+          <ellipse cx="58" cy="138" rx="42" ry="32" class="land"/>
+          <ellipse cx="22" cy="90" rx="15" ry="40" class="land"/>
+          <!-- Chokepoints -->
+          <circle cx="183" cy="102" r="6" fill="#f85149" opacity=".85"/>
+          <circle cx="183" cy="102" r="11" fill="none" stroke="#f85149" stroke-width=".7" opacity=".4"/>
+          <text x="191" y="99" class="cpl" fill="#f85149">HORMUZ</text>
+          <text x="191" y="108" class="cpl" fill="#f85149">HIGH</text>
+          <circle cx="146" cy="86" r="6" fill="#e3b341" opacity=".85"/>
+          <circle cx="146" cy="86" r="11" fill="none" stroke="#e3b341" stroke-width=".7" opacity=".4"/>
+          <text x="126" y="78" class="cpl" fill="#e3b341">SUEZ</text>
+          <text x="122" y="87" class="cpl" fill="#e3b341">ELEVATED</text>
+          <circle cx="246" cy="82" r="6" fill="#e3b341" opacity=".85"/>
+          <circle cx="246" cy="82" r="11" fill="none" stroke="#e3b341" stroke-width=".7" opacity=".4"/>
+          <text x="220" y="72" class="cpl" fill="#e3b341">TAIWAN STR</text>
+          <text x="228" y="81" class="cpl" fill="#e3b341">ELEVATED</text>
+          <circle cx="150" cy="106" r="5" fill="#f85149" opacity=".85"/>
+          <text x="108" y="106" class="cpl" fill="#f85149">RED SEA HIGH</text>
+          <circle cx="230" cy="115" r="5" fill="#3fb950" opacity=".85"/>
+          <text x="210" y="128" class="cpl" fill="#3fb950">MALACCA</text>
+          <text x="213" y="136" class="cpl" fill="#3fb950">STABLE</text>
+          <text x="6" y="180" style="font-size:6px;fill:#2d333b;font-family:'IBM Plex Mono',monospace">INDICATIVE — NOT TO SCALE</text>
+        </svg>
+        <div style="margin-top:12px" id="chokepoint-list"></div>
+      </div>
+    </div>
+
+    <!-- SCENARIOS TAB -->
+    <div id="tab-scenarios" style="display:none">
+      <div class="scenario-box">
+        <div class="scenario-title">PREDICTIVE IF / THEN ENGINE</div>
+        <div id="scenarios-list"></div>
+      </div>
+    </div>
+
+    <!-- VOLATILITY TAB -->
+    <div id="tab-vol" style="display:none">
+      <div class="volatility-section">
+        <div class="section-label" style="margin-bottom:12px">VOLATILITY vs 30-DAY AVERAGE</div>
+        <div id="vol-bars"></div>
+        <div style="display:flex;gap:12px;margin-top:10px;font-size:9px;color:#484f58">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:1px;height:10px;background:#484f58;display:inline-block"></span>30-day avg</span>
+          <span>Bar length = current vol</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span class="footer-note">2026 MACRO TICKER PLAYBOOK — TERMINAL EDITION — DATA IS SIMULATED FOR DEMO</span>
+  <span class="footer-note">TO WIRE LIVE DATA: REPLACE MOCK_DATA WITH FETCH FROM data.json (GitHub Actions / Python cron)</span>
+</div>
+
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const TICKERS = [
+  {sym:'UUP',name:'USD Index',role:'liquidity'},
+  {sym:'GLD',name:'Gold ETF',role:'liquidity'},
+  {sym:'USO',name:'Crude Oil',role:'macro'},
+  {sym:'ITA',name:'Defense ETF',role:'macro'},
+  {sym:'SPY',name:'S&P 500',role:'risk'},
+  {sym:'APO',name:'Apollo Global',role:'credit'},
+  {sym:'KKR',name:'KKR & Co',role:'credit'},
+  {sym:'FXI',name:'China ETF',role:'global'},
+  {sym:'INDA',name:'India ETF',role:'global'},
+  {sym:'EIS',name:'Israel ETF',role:'global'},
+];
+
+// Simulated data — replace with: fetch('data.json').then(r=>r.json())
+const MOCK_DATA = {
+  UUP: {price:28.34,chg:0.0182,hist:[27.6,27.7,27.9,27.8,28.0,28.1,28.3,28.34],vol:0.82,avgVol:0.55},
+  GLD: {price:211.40,chg:-0.0143,hist:[217,215,214,213,212.5,212,211.8,211.4],vol:1.12,avgVol:0.95},
+  USO: {price:74.21,chg:0.0612,hist:[67,68.5,69,70.2,71.5,72,73.8,74.21],vol:2.4,avgVol:1.8},
+  ITA: {price:132.87,chg:0.0234,hist:[128,128.5,129,130,130.5,131,132,132.87],vol:1.3,avgVol:1.1},
+  SPY: {price:492.33,chg:-0.0287,hist:[510,508,506,503,500,497,494,492.33],vol:1.9,avgVol:1.2},
+  APO: {price:88.12,chg:-0.0178,hist:[91,90.5,90,89.5,89,88.8,88.4,88.12],vol:2.1,avgVol:1.5},
+  KKR: {price:94.55,chg:-0.0122,hist:[96,95.8,95.5,95.2,95,94.8,94.7,94.55],vol:1.8,avgVol:1.4},
+  FXI: {price:31.44,chg:0.0088,hist:[30.5,30.8,31.0,31.1,31.2,31.3,31.35,31.44],vol:1.6,avgVol:1.7},
+  INDA:{price:48.72,chg:-0.0321,hist:[51,50.5,50,49.5,49.2,48.9,48.8,48.72],vol:1.4,avgVol:1.2},
+  EIS: {price:52.18,chg:0.0156,hist:[50.5,50.8,51.2,51.5,51.8,52.0,52.1,52.18],vol:2.8,avgVol:1.9},
+};
+
+const CORR = {
+  UUP: {UUP:1.00,GLD:-0.72,USO:0.31,ITA:0.15,SPY:-0.68,APO:-0.52,KKR:-0.49,FXI:-0.38,INDA:-0.61,EIS:0.22},
+  GLD: {UUP:-0.72,GLD:1.00,USO:0.24,ITA:-0.08,SPY:0.41,APO:0.38,KKR:0.35,FXI:0.28,INDA:0.19,EIS:-0.12},
+  USO: {UUP:0.31,GLD:0.24,USO:1.00,ITA:0.67,SPY:-0.55,APO:-0.29,KKR:-0.31,FXI:0.18,INDA:-0.74,EIS:0.58},
+  ITA: {UUP:0.15,GLD:-0.08,USO:0.67,ITA:1.00,SPY:-0.33,APO:-0.18,KKR:-0.21,FXI:0.09,INDA:-0.42,EIS:0.71},
+  SPY: {UUP:-0.68,GLD:0.41,USO:-0.55,ITA:-0.33,SPY:1.00,APO:0.78,KKR:0.81,FXI:0.52,INDA:0.63,EIS:-0.29},
+  APO: {UUP:-0.52,GLD:0.38,USO:-0.29,ITA:-0.18,SPY:0.78,APO:1.00,KKR:0.91,FXI:0.41,INDA:0.55,EIS:-0.19},
+  KKR: {UUP:-0.49,GLD:0.35,USO:-0.31,ITA:-0.21,SPY:0.81,APO:0.91,KKR:1.00,FXI:0.38,INDA:0.52,EIS:-0.22},
+  FXI: {UUP:-0.38,GLD:0.28,USO:0.18,ITA:0.09,SPY:0.52,APO:0.41,KKR:0.38,FXI:1.00,INDA:0.44,EIS:0.11},
+  INDA:{UUP:-0.61,GLD:0.19,USO:-0.74,ITA:-0.42,SPY:0.63,APO:0.55,KKR:0.52,FXI:0.44,INDA:1.00,EIS:-0.31},
+  EIS: {UUP:0.22,GLD:-0.12,USO:0.58,ITA:0.71,SPY:-0.29,APO:-0.19,KKR:-0.22,FXI:0.11,INDA:-0.31,EIS:1.00},
+};
+
+const NEWS = [
+  {source:'BLOOMBERG',cat:'energy',headline:'Strait of Hormuz tensions spike as drone attacks resume near Bandar Abbas',sentiment:'risk-off',time:'14m ago'},
+  {source:'WSJ',cat:'credit',headline:'Apollo and KKR face redemption pressure as private credit spreads widen 45bps',sentiment:'risk-off',time:'31m ago'},
+  {source:'FT',cat:'cb',headline:'Fed minutes signal "higher for longer" — markets reprice terminal rate to 5.75%',sentiment:'risk-off',time:'1h ago'},
+  {source:'AL JAZEERA',cat:'geo',headline:'IDF operations expand in northern sector; regional spillover risk elevated',sentiment:'risk-off',time:'1h ago'},
+  {source:'BLOOMBERG',cat:'energy',headline:'Red Sea freight rates surge 23% week-on-week as Houthi interdictions continue',sentiment:'risk-off',time:'2h ago'},
+  {source:'WSJ',cat:'cb',headline:'India central bank signals emergency rate meeting amid rupee slide vs USD',sentiment:'risk-off',time:'2h ago'},
+  {source:'FT',cat:'geo',headline:'China announces expanded naval exercises in South China Sea, disrupting trade lanes',sentiment:'neutral',time:'3h ago'},
+  {source:'BLOOMBERG',cat:'credit',headline:'High-yield spreads at widest since Oct 2022; distressed ratio climbing',sentiment:'risk-off',time:'3h ago'},
+  {source:'REUTERS',cat:'energy',headline:'OPEC+ maintains output cut; Saudi Arabia rules out emergency production increase',sentiment:'risk-off',time:'4h ago'},
+  {source:'FT',cat:'cb',headline:'ECB holds; Lagarde warns geopolitical energy pass-through still "live risk"',sentiment:'neutral',time:'5h ago'},
+  {source:'WSJ',cat:'geo',headline:'Taiwan semiconductor exports down 8% QoQ; supply chain rerouting underway',sentiment:'risk-off',time:'5h ago'},
+  {source:'BLOOMBERG',cat:'credit',headline:'KKR flags "selective" new deployment; pauses three infrastructure commitments',sentiment:'risk-off',time:'6h ago'},
+];
+
+const SYMS = TICKERS.map(t=>t.sym);
+
+// ─── REGIME DETECTION ────────────────────────────────────────────────────────
+function detectRegime(d) {
+  const uup=d.UUP.chg, gld=d.GLD.chg, uso=d.USO.chg, ita=d.ITA.chg;
+  const spy=d.SPY.chg, inda=d.INDA.chg, apo=d.APO.chg, kkr=d.KKR.chg;
+  const liq = uup>0.01 && gld<-0.005 && spy<-0.01;
+  const energy = uso>0.03 && spy<-0.01 && inda<-0.01 && ita>0.01;
+  const relief = uso<-0.02 && spy>0.01 && uup<-0.005 && inda>0.01;
+  const fiscal = spy<-0.02 && (apo<-0.02||kkr<-0.02) && uup>0.01;
+  if(energy&&liq) return 'ENERGY + LIQUIDITY STRESS';
+  if(energy) return 'ENERGY SHOCK';
+  if(liq) return 'LIQUIDITY STRESS';
+  if(relief) return 'RELIEF RALLY';
+  if(fiscal) return 'FISCAL ACCIDENT';
+  return 'MIXED / UNCERTAIN';
+}
+
+function regimeMeta(r) {
+  if(r.includes('ENERGY+LIQ')||r.includes('ENERGY + LIQ')) return {cls:'regime-energy',pcls:'pulse-red'};
+  if(r.includes('ENERGY')) return {cls:'regime-energy',pcls:'pulse-red'};
+  if(r.includes('LIQUIDITY')) return {cls:'regime-liquidity',pcls:'pulse-yellow'};
+  if(r.includes('RELIEF')) return {cls:'regime-relief',pcls:'pulse-green'};
+  if(r.includes('FISCAL')) return {cls:'regime-fiscal',pcls:'pulse-purple'};
+  return {cls:'regime-neutral',pcls:'pulse-gray'};
+}
+
+// ─── SPARKLINE ───────────────────────────────────────────────────────────────
+function sparkline(hist, chg) {
+  const mn=Math.min(...hist), mx=Math.max(...hist), rng=mx-mn||1;
+  const W=80, H=24;
+  const pts=hist.map((v,i)=>`${(i/(hist.length-1))*W},${H-((v-mn)/rng)*H}`).join(' ');
+  const col=chg>0?'#3fb950':chg<0?'#f85149':'#484f58';
+  const lx=(hist.length-1)/(hist.length-1)*W;
+  const ly=H-((hist[hist.length-1]-mn)/rng)*H;
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block">
+    <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="${lx}" cy="${ly}" r="2" fill="${col}"/>
+  </svg>`;
+}
+
+// ─── RENDER TICKERS ──────────────────────────────────────────────────────────
+function renderTickers() {
+  document.getElementById('ticker-grid').innerHTML = TICKERS.map(t=>{
+    const d=MOCK_DATA[t.sym];
+    const cls=d.chg>0?'up':d.chg<0?'down':'flat';
+    const sign=d.chg>0?'+':'';
+    return `<div class="ticker-card" onclick="selectTicker('${t.sym}')">
+      <div class="ticker-sym">${t.sym}</div>
+      <div class="ticker-name">${t.name}</div>
+      <div class="ticker-price">\$${d.price.toFixed(2)}</div>
+      <div class="ticker-change ${cls}">${sign}${(d.chg*100).toFixed(2)}%</div>
+      <div style="margin-top:8px">${sparkline(d.hist,d.chg)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── RENDER MATRIX ───────────────────────────────────────────────────────────
+function renderMatrix() {
+  const sigs=[
+    {label:'UUP',arrow:MOCK_DATA.UUP.chg>0.01?'↑':'→',on:MOCK_DATA.UUP.chg>0.01,col:'#58a6ff',tip:'USD Strength = Tightening'},
+    {label:'GLD',arrow:MOCK_DATA.GLD.chg<-0.01?'↓':'→',on:MOCK_DATA.GLD.chg<-0.01,col:'#e3b341',tip:'Gold Falling = Forced Sell'},
+    {label:'USO',arrow:MOCK_DATA.USO.chg>0.03?'↑':'→',on:MOCK_DATA.USO.chg>0.03,col:'#f85149',tip:'Oil Spike = Cost Shock'},
+    {label:'ITA',arrow:MOCK_DATA.ITA.chg>0.01?'↑':'→',on:MOCK_DATA.ITA.chg>0.01,col:'#f85149',tip:'Defense = Structural Conflict'},
+    {label:'SPY',arrow:MOCK_DATA.SPY.chg<-0.01?'↓':'→',on:MOCK_DATA.SPY.chg<-0.01,col:'#f85149',tip:'Equities Under Pressure'},
+    {label:'APO/KKR',arrow:MOCK_DATA.APO.chg<-0.01?'↓':'→',on:MOCK_DATA.APO.chg<-0.01,col:'#bc8cff',tip:'Credit Fragility Emerging'},
+    {label:'INDA',arrow:MOCK_DATA.INDA.chg<-0.02?'↓':'→',on:MOCK_DATA.INDA.chg<-0.02,col:'#f85149',tip:'EM Growth Squeezed'},
+    {label:'EIS',arrow:MOCK_DATA.EIS.chg>0.01?'↑':'→',on:MOCK_DATA.EIS.chg>0.01,col:'#e3b341',tip:'Conflict Adjacent Signal'},
+  ];
+  document.getElementById('matrix-grid').innerHTML = sigs.map(s=>`
+    <div class="signal-box" title="${s.tip}" style="${s.on?'border-color:'+s.col+';border-opacity:.4':''}" >
+      <div class="signal-ticker" style="${s.on?'color:'+s.col:''}">${s.label}</div>
+      <div class="signal-arrow" style="color:${s.on?s.col:'#2d333b'}">${s.arrow}</div>
+      <div class="signal-status" style="${s.on?'color:'+s.col+';opacity:.8':''}">${s.on?'TRIGGERED':'NEUTRAL'}</div>
+    </div>`).join('');
+}
+
+// ─── RENDER INSIGHTS ─────────────────────────────────────────────────────────
+function generateInsights(d) {
+  const ins=[];
+  if(d.USO.chg>0.05&&d.ITA.chg>0.02)
+    ins.push({type:'critical',icon:'!!',title:'SUPPLY CHAIN CONFLICT ALERT',
+      body:`USO +${(d.USO.chg*100).toFixed(1)}% concurrent with ITA +${(d.ITA.chg*100).toFixed(1)}%. Energy disruption threshold breached. Maritime freight surcharges expected within 2–4 weeks.`});
+  if(d.UUP.chg>0.01&&d.GLD.chg<-0.01)
+    ins.push({type:'warning',icon:'!',title:'SYSTEMIC DASH FOR CASH',
+      body:'Gold is failing as a hedge during stress — not a buy signal. Forced liquidation detected. Corporate refinancing risk elevated. Stay heavy USD/cash.'});
+  if(d.USO.chg>0.05&&d.INDA.chg<-0.02)
+    ins.push({type:'warning',icon:'!',title:'ENERGY–GROWTH DECOUPLING',
+      body:`USO/INDA trailing correlation: −0.74. Oil spike actively suppressing EM manufacturing demand. Expect INDA underperformance 3–6 months. Supply chain cost pass-through incoming.`});
+  if(d.APO.chg<-0.015&&d.KKR.chg<-0.01)
+    ins.push({type:'warning',icon:'!',title:'PRIVATE CREDIT FRAGILITY',
+      body:'APO and KKR moving in sync under stress — liquid proxy signals hidden credit layer under pressure. Watch for gating news or redemption requests.'});
+  if(d.SPY.chg<-0.02&&d.UUP.chg>0.01&&d.GLD.chg<0)
+    ins.push({type:'critical',icon:'!!',title:'CORRELATED ASSET SELLOFF',
+      body:'Equities, gold, and risk assets declining simultaneously. Classic margin call signature. No safe haven is working — pure cash preference regime active.'});
+  if(ins.length===0)
+    ins.push({type:'info',icon:'i',title:'NO CRITICAL SIGNALS ACTIVE',
+      body:'Current configuration shows no regime-critical triggers. Monitor USO and UUP as the leading-edge indicators for the next regime shift.'});
+  return ins;
+}
+
+function renderInsights(ins) {
+  document.getElementById('insights-container').innerHTML = ins.map(i=>`
+    <div class="insight-card">
+      <div class="insight-icon insight-${i.type}">${i.icon}</div>
+      <div>
+        <div class="insight-title">${i.title}</div>
+        <div class="insight-body">${i.body}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── RENDER CORRELATION ──────────────────────────────────────────────────────
+function renderCorrelation() {
+  const labels=document.getElementById('corr-labels');
+  labels.innerHTML = SYMS.map(s=>`<div style="width:28px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#484f58;text-align:center;overflow:hidden;white-space:nowrap">${s}</div>`).join('');
+  const rows=document.getElementById('corr-rows');
+  rows.innerHTML = SYMS.map(rs=>{
+    const cells=SYMS.map(cs=>{
+      const v=CORR[rs][cs];
+      let bg;
+      if(v===1) bg='#21262d';
+      else if(v>0.5) bg=`rgba(63,185,80,${0.25+v*0.55})`;
+      else if(v>0.1) bg=`rgba(63,185,80,${v*0.7})`;
+      else if(v<-0.5) bg=`rgba(248,81,73,${0.25+Math.abs(v)*0.55})`;
+      else if(v<-0.1) bg=`rgba(248,81,73,${Math.abs(v)*0.7})`;
+      else bg='#161b22';
+      const tc=Math.abs(v)>0.4?'#e6edf3':'#484f58';
+      return `<div class="corr-cell" style="background:${bg};color:${tc}" title="${rs}/${cs}: ${v.toFixed(2)}">${v===1?'—':v.toFixed(1)}</div>`;
+    }).join('');
+    return `<div style="display:flex;gap:3px;align-items:center;margin-bottom:3px">
+      <div style="width:36px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#484f58;text-align:right;padding-right:4px;flex-shrink:0">${rs}</div>
+      ${cells}
+    </div>`;
+  }).join('');
+}
+
+// ─── RENDER NEWS ─────────────────────────────────────────────────────────────
+function renderNews() {
+  const catMap={geo:'GEOPOLITICS',cb:'CENTRAL BANKS',credit:'CREDIT',energy:'ENERGY'};
+  const catCls={geo:'cat-geo',cb:'cat-cb',credit:'cat-credit',energy:'cat-energy'};
+  document.getElementById('news-feed').innerHTML = NEWS.map(n=>`
+    <div class="news-item">
+      <div class="news-meta">
+        <span class="news-source">${n.source}</span>
+        <span class="news-cat ${catCls[n.cat]}">${catMap[n.cat]}</span>
+        <span class="timestamp" style="margin-left:auto">${n.time}</span>
+      </div>
+      <div class="news-headline">${n.headline}</div>
+      <div class="news-sentiment ${n.sentiment==='risk-off'?'risk-off':n.sentiment==='risk-on'?'risk-on':'neutral-s'}">
+        ${n.sentiment==='risk-off'?'▼ Risk-Off':n.sentiment==='risk-on'?'▲ Risk-On':'● Neutral'}
+      </div>
+    </div>`).join('');
+}
+
+// ─── RENDER FLASH ALERT ──────────────────────────────────────────────────────
+function renderFlashAlert() {
+  const uso=MOCK_DATA.USO.chg, ita=MOCK_DATA.ITA.chg;
+  if(uso>0.05&&ita>0.02) {
+    document.getElementById('alert-indicator').style.display='block';
+    document.getElementById('flash-alert-container').innerHTML=`
+      <div class="flash-alert">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:#f85149;flex-shrink:0;line-height:1">!</div>
+        <div>
+          <div class="alert-label">SUPPLY CHAIN CONFLICT ALERT — THRESHOLD BREACHED</div>
+          <div class="alert-text">USO +${(uso*100).toFixed(1)}% concurrent with ITA +${(ita*100).toFixed(1)}%. Maritime freight surcharges expected. Energy disruption is structural.</div>
+        </div>
+      </div>`;
+  }
+}
+
+// ─── RENDER CHOKEPOINTS ──────────────────────────────────────────────────────
+function renderChokepoints() {
+  const cps=[
+    {name:'Strait of Hormuz',status:'HIGH RISK',col:'#f85149',desc:'~20% of global oil supply. Drone activity near Bandar Abbas ongoing.'},
+    {name:'Red Sea / Bab el-Mandeb',status:'HIGH RISK',col:'#f85149',desc:'Houthi interdictions continuing. Freight rates +23% WoW.'},
+    {name:'Suez Canal',status:'ELEVATED',col:'#e3b341',desc:'Vessels rerouting via Cape of Good Hope. +14 days transit time.'},
+    {name:'Taiwan Strait',status:'ELEVATED',col:'#e3b341',desc:'PLA naval exercises active. Semiconductor supply chain rerouting.'},
+    {name:'Strait of Malacca',status:'STABLE',col:'#3fb950',desc:'Normal flow. China-ASEAN routes intact.'},
+  ];
+  document.getElementById('chokepoint-list').innerHTML = cps.map(c=>`
+    <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #21262d">
+      <div style="width:8px;height:8px;border-radius:50%;background:${c.col};flex-shrink:0;margin-top:3px"></div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:${c.col};font-weight:600">${c.name} <span style="color:#484f58;font-size:9px">${c.status}</span></div>
+        <div style="font-size:10px;color:#8b949e;margin-top:2px;line-height:1.4">${c.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── RENDER SCENARIOS ────────────────────────────────────────────────────────
+function renderScenarios() {
+  const sc=[
+    {if:'Oil sustained above $90',then:'Global CPI floor rises 0.8–1.2%. Fed rate cut probability in 2026 drops to <15%. INDA likely down 8% forward.'},
+    {if:'UUP breaks above 29',then:'Dollar milkshake effect kicks in. EM debt stress accelerates. APO/KKR credit book repricing likely.'},
+    {if:'GLD falls below $200',then:'Not a bullish USD signal — it is forced liquidation. Systemic cash crunch. Reduce all risk immediately.'},
+    {if:'ITA gains >15% in 30 days',then:'Conflict is structural, not transitory. Re-rate defense overweight. The growth trade is effectively dead.'},
+    {if:'SPY > $520 + USO < $60',then:'Genuine relief rally forming. War risk premium unwinding. Rotate back to EM. INDA likely leads recovery.'},
+    {if:'FXI + SPY diverge >10%',then:'US/China growth paths decoupling. Watch for currency controls or stimulus shock from Beijing.'},
+    {if:'APO or KKR gates redemptions',then:'Private credit cycle has turned. This is the hidden credit layer cracking. Maximum caution on all levered positions.'},
+  ];
+  document.getElementById('scenarios-list').innerHTML = sc.map(s=>`
+    <div class="scenario-item">
+      <div class="scenario-if">IF</div>
+      <div class="scenario-then"><span class="scenario-cond">${s.if}</span> — ${s.then}</div>
+    </div>`).join('');
+}
+
+// ─── RENDER VOLATILITY ───────────────────────────────────────────────────────
+function renderVolatility() {
+  const maxVol=Math.max(...SYMS.map(s=>Math.max(MOCK_DATA[s].vol,MOCK_DATA[s].avgVol)));
+  document.getElementById('vol-bars').innerHTML = SYMS.map(sym=>{
+    const d=MOCK_DATA[sym];
+    const pct=(d.vol/maxVol)*100;
+    const avgPct=(d.avgVol/maxVol)*100;
+    const col=d.vol>d.avgVol*1.3?'#f85149':d.vol>d.avgVol*1.1?'#e3b341':'#3fb950';
+    return `<div class="vol-bar-wrap">
+      <div class="vol-sym">${sym}</div>
+      <div class="vol-track">
+        <div class="vol-fill" style="width:${pct}%;background:${col};opacity:.8"></div>
+        <div class="vol-avg-line" style="left:${avgPct}%"></div>
+      </div>
+      <div class="vol-val">${d.vol.toFixed(1)}%</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── CLOCK ───────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now=new Date();
+  const h=String(now.getUTCHours()).padStart(2,'0');
+  const m=String(now.getUTCMinutes()).padStart(2,'0');
+  const s=String(now.getUTCSeconds()).padStart(2,'0');
+  document.getElementById('timestamp').textContent=`${h}:${m}:${s} UTC`;
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  ['wire','map','scenarios','vol'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'':'none';
+  });
+  document.querySelectorAll('.tab').forEach(el=>{
+    el.classList.toggle('active',el.dataset.tab===tab);
+  });
+}
+
+function selectTicker(sym) {
+  document.querySelectorAll('.ticker-card').forEach((el,i)=>{
+    el.classList.toggle('active',TICKERS[i].sym===sym);
+  });
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+function init() {
+  renderTickers();
+  const regime=detectRegime(MOCK_DATA);
+  const meta=regimeMeta(regime);
+  const badge=document.getElementById('regime-badge');
+  badge.className='regime-badge '+meta.cls;
+  document.getElementById('regime-text').textContent=regime;
+  document.getElementById('regime-pulse').className='pulse '+meta.pcls;
+
+  const signals=[
+    MOCK_DATA.UUP.chg>0.01,
+    MOCK_DATA.GLD.chg<-0.005,
+    MOCK_DATA.USO.chg>0.03,
+    MOCK_DATA.ITA.chg>0.01,
+    MOCK_DATA.SPY.chg<-0.01,
+    MOCK_DATA.INDA.chg<-0.02,
+  ];
+  const triggered=signals.filter(Boolean).length;
+  const confidence=triggered>=5?'CONFIDENCE: HIGH':triggered>=3?'CONFIDENCE: MEDIUM':'CONFIDENCE: LOW';
+  document.getElementById('regime-confidence').textContent=confidence;
+
+  renderMatrix();
+  renderInsights(generateInsights(MOCK_DATA));
+  renderCorrelation();
+  renderNews();
+  renderFlashAlert();
+  renderChokepoints();
+  renderScenarios();
+  renderVolatility();
+  updateClock();
+  setInterval(updateClock,1000);
+}
+
+init();
+</script>
+</body>
+</html>
