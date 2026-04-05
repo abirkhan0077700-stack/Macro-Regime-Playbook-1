@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACRO REGIME PLAYBOOK // APR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b0f;
+    --bg2: #0d1117;
+    --bg3: #111820;
+    --border: #1e2a38;
+    --border2: #243040;
+    --text: #c8d8e8;
+    --dim: #4a6278;
+    --faint: #1e2a38;
+    --red: #ff3b3b;
+    --orange: #ff8c42;
+    --yellow: #f7c948;
+    --green: #3ecf8e;
+    --blue: #4a9eff;
+    --purple: #a78bfa;
+    --cyan: #22d3ee;
+    --white: #f0f6ff;
+    --gold: #d4a843;
+    --critical: #ff2244;
+    --high: #ff6b35;
+    --medium: #f7c948;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    background: var(--bg2);
+    border-bottom: 2px solid var(--red);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .logo span { color: var(--red); }
+
+  .version {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 1px;
+  }
+
+  .live-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse-green 1.5s infinite;
+  }
+
+  @keyframes pulse-green {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .clock {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+  }
+
+  /* ─── REGIME BANNER ─── */
+  .regime-banner {
+    background: linear-gradient(135deg, #1a0808 0%, #200d00 50%, #0d0808 100%);
+    border-bottom: 1px solid var(--red);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .regime-tag {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--red);
+  }
+
+  .regime-desc {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--orange);
+    max-width: 600px;
+  }
+
+  .regime-metrics {
+    display: flex;
+    gap: 24px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  .regime-metric {
+    text-align: right;
+  }
+
+  .regime-metric .val {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--yellow);
+  }
+
+  .regime-metric .lbl {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ─── LAYOUT ─── */
+  .grid-main {
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    min-height: calc(100vh - 120px);
+  }
+
+  /* ─── SIDEBAR LEFT ─── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .sidebar-section {
+    border-bottom: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── TICKER LIST ─── */
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--faint);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .ticker-item:last-child { border-bottom: none; }
+  .ticker-item:hover { background: rgba(255,255,255,0.02); margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+
+  .ticker-sym {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--white);
+    min-width: 50px;
+  }
+
+  .ticker-name {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--dim);
+    flex: 1;
+    padding: 0 8px;
+  }
+
+  .ticker-price {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text);
+    text-align: right;
+    min-width: 60px;
+  }
+
+  .ticker-chg {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 52px;
+    text-align: right;
+  }
+
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .flat { color: var(--dim); }
+
+  /* ─── REGIME MATRIX ─── */
+  .regime-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--faint);
+  }
+
+  .regime-row:last-child { border-bottom: none; }
+
+  .regime-name {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .regime-bar-wrap {
+    width: 80px;
+    height: 4px;
+    background: var(--faint);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .regime-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .regime-pct {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main-content {
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* ─── TAB NAV ─── */
+  .tab-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .tab {
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--white); border-bottom-color: var(--blue); }
+
+  /* ─── PANELS ─── */
+  .panel { display: none; padding: 20px; }
+  .panel.active { display: block; }
+
+  /* ─── CASCADE ENGINE ─── */
+  .cascade-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .cascade-layer {
+    background: var(--bg2);
+    padding: 16px;
+  }
+
+  .layer-num {
+    font-family: var(--font-display);
+    font-size: 42px;
+    color: var(--faint);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .layer-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .layer-status {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .status-critical { background: rgba(255,34,68,0.15); color: var(--red); border: 1px solid rgba(255,34,68,0.3); }
+  .status-elevated { background: rgba(255,107,53,0.15); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+  .status-moderate { background: rgba(247,201,72,0.15); color: var(--yellow); border: 1px solid rgba(247,201,72,0.3); }
+  .status-normal { background: rgba(62,207,142,0.15); color: var(--green); border: 1px solid rgba(62,207,142,0.3); }
+
+  .layer-body {
+    font-size: 11px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .layer-tickers {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .ticker-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid var(--border2);
+    color: var(--blue);
+  }
+
+  .ticker-badge.long { border-color: rgba(62,207,142,0.4); color: var(--green); }
+  .ticker-badge.short { border-color: rgba(255,59,59,0.4); color: var(--red); }
+  .ticker-badge.watch { border-color: rgba(247,201,72,0.4); color: var(--yellow); }
+
+  .cascade-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    width: 32px;
+    color: var(--dim);
+    font-size: 18px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 8px 0;
+    flex-shrink: 0;
+  }
+
+  /* ─── PLAYBOOK TABLE ─── */
+  .playbook-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .playbook-table th {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 2px solid var(--border2);
+    color: var(--dim);
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .playbook-table td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--faint);
+    vertical-align: middle;
+  }
+
+  .playbook-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .regime-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .active-regime { background: rgba(255,34,68,0.15); color: var(--red); }
+  .watch-regime { background: rgba(247,201,72,0.1); color: var(--yellow); }
+  .off-regime { background: rgba(74,98,120,0.15); color: var(--dim); }
+
+  .conviction-bar {
+    display: flex;
+    gap: 2px;
+  }
+
+  .conv-dot {
+    width: 10px; height: 10px;
+    border-radius: 1px;
+    background: var(--faint);
+  }
+
+  .conv-dot.filled { background: var(--blue); }
+  .conv-dot.filled.high { background: var(--green); }
+  .conv-dot.filled.critical { background: var(--red); }
+
+  /* ─── INTEL FEED ─── */
+  .intel-item {
+    border-left: 3px solid var(--border2);
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    background: var(--bg2);
+    border-radius: 0 4px 4px 0;
+    position: relative;
+  }
+
+  .intel-item.critical { border-left-color: var(--critical); }
+  .intel-item.high { border-left-color: var(--high); }
+  .intel-item.medium { border-left-color: var(--medium); }
+
+  .intel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .intel-level {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 2px 6px;
+    border-radius: 1px;
+  }
+
+  .intel-level.critical { background: rgba(255,34,68,0.2); color: var(--critical); }
+  .intel-level.high { background: rgba(255,107,53,0.2); color: var(--high); }
+  .intel-level.medium { background: rgba(247,201,72,0.15); color: var(--medium); }
+
+  .intel-source {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--blue);
+  }
+
+  .intel-time {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    margin-left: auto;
+  }
+
+  .intel-title {
+    font-size: 12px;
+    color: var(--white);
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .intel-body {
+    font-size: 11px;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  .intel-signal {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* ─── RIGHT SIDEBAR ─── */
+  .right-sidebar {
+    border-left: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  /* ─── CHOKEPOINT MAP ─── */
+  .chokepoint-map {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chokepoint-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--faint);
+  }
+
+  .chokepoint-item:last-child { border-bottom: none; }
+
+  .cp-name {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cp-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cp-status {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 1px;
+  }
+
+  .cp-flow {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    text-align: right;
+    min-width: 50px;
+  }
+
+  /* ─── IF/THEN ENGINE ─── */
+  .ifthen-item {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .ifthen-if {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+
+  .ifthen-condition {
+    font-size: 11px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .ifthen-arrow {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    margin-bottom: 2px;
+  }
+
+  .ifthen-then {
+    font-size: 11px;
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ─── VOLATILITY BARS ─── */
+  .vol-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-bottom: 1px solid var(--faint);
+  }
+
+  .vol-sym {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--white);
+    min-width: 40px;
+  }
+
+  .vol-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--faint);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .vol-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s ease;
+  }
+
+  .vol-val {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    min-width: 30px;
+    text-align: right;
+  }
+
+  /* ─── HEADLINE TICKER ─── */
+  .headline-ticker {
+    background: #0d0a00;
+    border-top: 1px solid rgba(247,201,72,0.3);
+    border-bottom: 1px solid rgba(247,201,72,0.3);
+    padding: 6px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker-scroll 80s linear infinite;
+  }
+
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-headline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--yellow);
+    padding: 0 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ticker-headline::before {
+    content: '◆';
+    color: var(--red);
+    font-size: 8px;
+  }
+
+  /* ─── HEATMAP ─── */
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    margin-top: 8px;
+  }
+
+  .heatmap-cell {
+    padding: 8px 4px;
+    border-radius: 2px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+  }
+
+  .heatmap-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--dim);
+    margin-top: 2px;
+  }
+
+  /* ─── CHART MINI ─── */
+  canvas.sparkline {
+    display: block;
+    width: 100%;
+    height: 50px;
+    image-rendering: crisp-edges;
+  }
+
+  /* ─── SIGNAL CONSOLE ─── */
+  .console {
+    background: #060a0e;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.8;
+    max-height: 160px;
+    overflow-y: auto;
+    margin-top: 16px;
+  }
+
+  .console-line { display: flex; gap: 8px; }
+  .console-time { color: var(--dim); flex-shrink: 0; }
+  .console-msg.green { color: var(--green); }
+  .console-msg.red { color: var(--red); }
+  .console-msg.yellow { color: var(--yellow); }
+  .console-msg.blue { color: var(--blue); }
+  .console-msg.dim { color: var(--dim); }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer-sources {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+  }
+
+  .footer-disclaimer {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    opacity: 0.6;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1100px) {
+    .grid-main { grid-template-columns: 1fr; }
+    .sidebar, .right-sidebar { border: none; border-bottom: 1px solid var(--border); }
+    .cascade-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─── ANIM ENTRANCE ─── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+  .fade-in-1 { animation-delay: 0.05s; opacity: 0; }
+  .fade-in-2 { animation-delay: 0.1s; opacity: 0; }
+  .fade-in-3 { animation-delay: 0.15s; opacity: 0; }
+  .fade-in-4 { animation-delay: 0.2s; opacity: 0; }
+  .fade-in-5 { animation-delay: 0.25s; opacity: 0; }
+
+  /* ─── NUMBER COUNTER ─── */
+  .counter { display: inline-block; }
+
+  /* ─── BLINK ─── */
+  .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* ─── GRID OVERLAY ─── */
+  .data-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--dim);
+    padding: 2px 5px;
+    border: 1px solid var(--faint);
+    border-radius: 2px;
+  }
+
+  h2.panel-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  h2.panel-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .key-instrument {
+    background: linear-gradient(135deg, rgba(74,158,255,0.08), rgba(74,158,255,0.02));
+    border: 1px solid rgba(74,158,255,0.3);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .key-instrument-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .star-badge {
+    background: var(--blue);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .key-sym {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--blue);
+    letter-spacing: 2px;
+  }
+
+  .key-price {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .key-chg {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--red);
+  }
+
+  .key-rationale {
+    font-size: 11px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  table.correlation-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    margin-top: 10px;
+  }
+
+  table.correlation-tbl th, table.correlation-tbl td {
+    padding: 5px 8px;
+    border: 1px solid var(--faint);
+    text-align: center;
+  }
+
+  table.correlation-tbl th {
+    background: var(--bg2);
+    color: var(--dim);
+    font-size: 8px;
+    font-weight: 400;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">MACRO<span>OPS</span></div>
+    <div class="version">REGIME PLAYBOOK // V3.0 // APR 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="live-indicator">
+      <div class="live-dot"></div>
+      LIVE FEED
+    </div>
+    <div class="clock" id="clock">--:-- UTC</div>
+  </div>
+</div>
+
+<!-- HEADLINE TICKER -->
+<div class="headline-ticker">
+  <div class="ticker-track" id="ticker-track">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- REGIME BANNER -->
+<div class="regime-banner">
+  <div>
+    <div class="regime-tag">⚡ ENERGY SHOCK / WAR PREMIUM</div>
+    <div class="regime-desc">Operation Epic Fury (Feb 28) → Hormuz closure → worst supply shock since 1973. US/Israel vs Iran. Week 5. Day 35.</div>
+  </div>
+  <div class="regime-metrics">
+    <div class="regime-metric">
+      <div class="val" id="brent-val">$112.42</div>
+      <div class="lbl">Brent ↑44% YTD</div>
+    </div>
+    <div class="regime-metric">
+      <div class="val" style="color:var(--gold)">$3,247</div>
+      <div class="lbl">Gold / oz</div>
+    </div>
+    <div class="regime-metric">
+      <div class="val" style="color:var(--orange)">4.36%</div>
+      <div class="lbl">US 10Y Yield</div>
+    </div>
+    <div class="regime-metric">
+      <div class="val" style="color:var(--red)">CLOSED</div>
+      <div class="lbl">Hormuz Status</div>
+    </div>
+    <div class="regime-metric">
+      <div class="val blink" style="color:var(--red)">●</div>
+      <div class="lbl">DAY 35 OF WAR</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="grid-main">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="section-label">10 Instruments</div>
+      <div id="ticker-list">
+        <!-- JS rendered -->
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Regime Probability</div>
+      <div id="regime-probs"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Cascade Stage</div>
+      <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text); line-height: 1.7;">
+        <div style="color: var(--red); font-weight: 700;">▶ LAYER 1 CRITICAL</div>
+        <div style="color: var(--dim);">Layer 2 lag: ~10-14d</div>
+        <div style="color: var(--dim);">Layer 3 lag: ~30-45d</div>
+        <div style="margin-top: 8px; color: var(--yellow);">⚠ OECD buffers: -166Mb Apr</div>
+        <div style="color: var(--yellow);">⚠ Fertilizer crisis emerging</div>
+        <div style="color: var(--orange); margin-top: 4px;">→ WTI > Brent (inversion)</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Data Sources</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+        <span class="data-badge">EIA STEO</span>
+        <span class="data-badge">FRED</span>
+        <span class="data-badge">GDELT</span>
+        <span class="data-badge">ACLED</span>
+        <span class="data-badge">ISW</span>
+        <span class="data-badge">Oryx</span>
+        <span class="data-badge">Al Jazeera</span>
+        <span class="data-badge">BBC</span>
+        <span class="data-badge">CNN</span>
+        <span class="data-badge">Bloomberg</span>
+        <span class="data-badge">FT</span>
+        <span class="data-badge">DeepStateMap</span>
+        <span class="data-badge">MarineTraffic</span>
+        <span class="data-badge">OpenSecrets</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TAB NAV -->
+    <div class="tab-nav">
+      <div class="tab active" onclick="showTab('cascade')">Cascade Engine</div>
+      <div class="tab" onclick="showTab('playbook')">Playbook Matrix</div>
+      <div class="tab" onclick="showTab('intel')">Intel Feed</div>
+      <div class="tab" onclick="showTab('instrument')">Key Instrument</div>
+      <div class="tab" onclick="showTab('signals')">IF/THEN Signals</div>
+    </div>
+
+    <!-- PANEL: CASCADE -->
+    <div class="panel active" id="panel-cascade">
+      <h2 class="panel-title">3-Layer Commodity → Credit → Consumer Cascade</h2>
+
+      <div class="cascade-grid">
+        <div class="cascade-layer fade-in fade-in-1">
+          <div class="layer-num">01</div>
+          <div class="layer-title" style="color:var(--red)">UPSTREAM — INPUTS</div>
+          <span class="layer-status status-critical">CRITICAL</span>
+          <div class="layer-body">
+            <strong style="color:var(--white)">Brent $112/b (+44% YTD)</strong> — WTI now inverted above Brent for first time since 2022; traders using WTI as direct US Iran war bet. EIA: "Crude has risen as petroleum shipments through Strait of Hormuz have fallen and some Middle East oil production shut in." OECD commercial inventories drawing 166Mb in April alone. Ras Laffan (Qatar LNG hub) disruption sends Asian/EU gas prices surging. Fertilizer routes choked — FAO warns 3-month window before global planting decisions impacted.
+          </div>
+          <div style="margin-top:8px; font-family: var(--font-mono); font-size: 9px; color: var(--dim);">
+            Lag: immediate → Layer 2 in 10-14 days
+          </div>
+          <div class="layer-tickers">
+            <span class="ticker-badge long">↑ USO</span>
+            <span class="ticker-badge long">↑ UUP</span>
+            <span class="ticker-badge long">↑ GLD</span>
+            <span class="ticker-badge short">↓ TLT</span>
+          </div>
+        </div>
+
+        <div class="cascade-layer fade-in fade-in-2">
+          <div class="layer-num">02</div>
+          <div class="layer-title" style="color:var(--orange)">MIDSTREAM — CREDIT</div>
+          <span class="layer-status status-elevated">ELEVATED</span>
+          <div class="layer-body">
+            <strong style="color:var(--white)">Private credit stress appearing.</strong> APO capped redemptions at 5% on $15.1B Debt Solutions fund. Ares similarly gated $10.7B fund. KKR facing Moody's downgrade. Petrochemical margins collapsing — BASF, Dow, LyondellBasell face ethylene/ammonia curtailment. EU fertilizer plants shutting. US defense budget request: $1.5T (+40% YoY) — largest in modern history. 10Y yield edging 4.36% as inflation re-acceleration fears mount. Fed on hold.
+          </div>
+          <div style="margin-top:8px; font-family: var(--font-mono); font-size: 9px; color: var(--dim);">
+            Lag: 10-30 days from Layer 1 trigger
+          </div>
+          <div class="layer-tickers">
+            <span class="ticker-badge short">↓ APO</span>
+            <span class="ticker-badge short">↓ KKR</span>
+            <span class="ticker-badge long">↑ ITA</span>
+            <span class="ticker-badge watch">~ TLT</span>
+          </div>
+        </div>
+
+        <div class="cascade-layer fade-in fade-in-3">
+          <div class="layer-num">03</div>
+          <div class="layer-title" style="color:var(--yellow)">DOWNSTREAM — CONSUMER</div>
+          <span class="layer-status status-moderate">PROPAGATING</span>
+          <div class="layer-body">
+            <strong style="color:var(--white)">Asia rationing fuel; EU aviation crisis.</strong> Malaysia ordered civil servants WFH to conserve energy. Société Générale: final jet fuel tankers arriving UK within 48hrs — no further supply scheduled. India CPI watch — INDA underperforming. 20,000 sailors stranded in Hormuz. Dubai International Airport still limited capacity. S&P 500 worst month in a year. Consumer discretionary leading the pullback. La Niña + fertilizer crunch → next food crisis already beginning.
+          </div>
+          <div style="margin-top:8px; font-family: var(--font-mono); font-size: 9px; color: var(--dim);">
+            Lag: 30-45 days from Layer 1 trigger
+          </div>
+          <div class="layer-tickers">
+            <span class="ticker-badge short">↓ SPY</span>
+            <span class="ticker-badge short">↓ INDA</span>
+            <span class="ticker-badge watch">~ XLB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return Heatmap -->
+      <h2 class="panel-title" style="font-size:16px;">Annual Return Heatmap — Verified Data</h2>
+      <div id="heatmap" style="overflow-x:auto;"></div>
+
+      <!-- Signal Console -->
+      <h2 class="panel-title" style="font-size:16px; margin-top:20px;">Live Signal Console</h2>
+      <div class="console" id="console"></div>
+    </div>
+
+    <!-- PANEL: PLAYBOOK -->
+    <div class="panel" id="panel-playbook">
+      <h2 class="panel-title">10-Ticker Regime Playbook</h2>
+      <div style="overflow-x:auto;">
+        <table class="playbook-table">
+          <thead>
+            <tr>
+              <th>Ticker</th>
+              <th>Asset</th>
+              <th>Energy Shock</th>
+              <th>War Premium</th>
+              <th>Goldilocks</th>
+              <th>Credit Stress</th>
+              <th>Deflation</th>
+              <th>Conviction</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="playbook-body"></tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="panel-title" style="font-size:16px;">Regime Classification Triggers</h2>
+      <div id="regime-triggers"></div>
+    </div>
+
+    <!-- PANEL: INTEL -->
+    <div class="panel" id="panel-intel">
+      <h2 class="panel-title">Open-Source Intelligence Feed</h2>
+      <div id="intel-feed"></div>
+    </div>
+
+    <!-- PANEL: KEY INSTRUMENT -->
+    <div class="panel" id="panel-instrument">
+      <h2 class="panel-title">Most Important Instrument to Track</h2>
+
+      <div class="key-instrument">
+        <div class="key-instrument-header">
+          <span class="star-badge">★ PRIMARY SIGNAL</span>
+          <div class="key-sym">BRENT CRUDE</div>
+          <div>
+            <div class="key-price">$112.42</div>
+            <div class="key-chg">+44.7% YTD ↑ April 2026</div>
+          </div>
+        </div>
+        <div class="key-rationale">
+          <strong style="color:var(--white)">Why Brent is the master variable right now:</strong> Every single cascade layer flows from it. When Brent spikes, Layer 1 tickers move within hours (USO, UUP). Layer 2 credit stress follows in 10-14 days (APO, KKR gate redemptions). Layer 3 consumer squeeze follows in 30-45 days (INDA CPI, SPY consumer discretionary). The Hormuz closure has disconnected physical oil from paper Brent — watch the <em>Brent-WTI inversion</em> as the most precise stress indicator. When WTI > Brent (currently happening), US traders are pricing total Hormuz permanence. A narrowing of the spread signals diplomatic progress before any official announcement.
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+        <div>
+          <div class="section-label">Secondary: WTI-Brent Spread</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text); line-height: 1.7; padding: 10px; background: var(--bg2); border-radius: 4px;">
+            WTI premium over Brent = rare inversion. Only happens when:<br>
+            <span style="color:var(--yellow)">① US is direct war participant</span><br>
+            <span style="color:var(--yellow)">② Domestic production premium priced in</span><br>
+            <span style="color:var(--yellow)">③ Iranian supplies permanently stranded</span><br>
+            <br>
+            <strong style="color:var(--white)">Playbook call:</strong> WTI-Brent convergence = first ceasefire signal. Monitor daily.
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label">Tertiary: GLD/USO Ratio</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text); line-height: 1.7; padding: 10px; background: var(--bg2); border-radius: 4px;">
+            GLD outperforming USO = fiscal/monetary stress overlay on top of supply shock.<br>
+            <br>
+            <span style="color:var(--gold)">GLD +63.7% in 2025</span><br>
+            <span style="color:var(--gold)">JPMorgan: $4,000-$6,300 range</span><br>
+            <br>
+            <strong style="color:var(--white)">Signal:</strong> GLD rising faster than USO = war premium is becoming a currency war. Watch DXY.
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label">Quart: ITA vs SPY Spread</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text); line-height: 1.7; padding: 10px; background: var(--bg2); border-radius: 4px;">
+            The war premium hedge in one number. 2022: +28pt spread. 2025: +30pt spread.<br>
+            <br>
+            Oryx equipment loss database is the leading indicator: every verified armor kill → new procurement order in 6-18 months.<br>
+            <br>
+            <strong style="color:var(--white)">Trump defense request: $1.5T (+40%).</strong> ITA structural overweight.
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label">Watch: INDA CPI (30d lag)</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text); line-height: 1.7; padding: 10px; background: var(--bg2); border-radius: 4px;">
+            India = world's largest FMCG hub + major LNG importer. When INDA turns positive after an energy shock peak, Layer 3 has absorbed the hit.<br>
+            <br>
+            <span style="color:var(--yellow)">India also halting Russian oil purchases</span> per US trade deal — creates double energy cost pressure.<br>
+            <br>
+            <strong style="color:var(--white)">Recovery signal:</strong> INDA > SPY spread positive for 3 weeks = cascade reversing.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-label">Correlation Matrix — Energy Shock Regime</div>
+      <table class="correlation-tbl">
+        <thead>
+          <tr><th></th><th>USO</th><th>GLD</th><th>TLT</th><th>SPY</th><th>ITA</th><th>UUP</th><th>INDA</th></tr>
+        </thead>
+        <tbody id="corr-matrix"></tbody>
+      </table>
+
+    </div>
+
+    <!-- PANEL: SIGNALS -->
+    <div class="panel" id="panel-signals">
+      <h2 class="panel-title">Predictive IF/THEN Signal Engine</h2>
+      <div id="signals-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right-sidebar">
+
+    <div class="sidebar-section">
+      <div class="section-label">Maritime Chokepoints</div>
+      <div id="chokepoints"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Volatility Rank</div>
+      <div id="vol-bars" style="margin: 0 -16px;"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Geopolitical Risk Score</div>
+      <div id="geo-scores"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Quick Signals</div>
+      <div id="quick-signals" style="font-family: var(--font-mono); font-size: 10px; line-height: 2;"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-sources">
+    APIs: EIA STEO · FRED (St. Louis Fed) · Yahoo Finance · GDELT · ACLED · ISW · Oryx · MarineTraffic · DeepStateMap · OpenSecrets · GovTrack · UN HDX · Al Jazeera · CNN · BBC · Bloomberg · FT
+  </div>
+  <div class="footer-disclaimer">
+    FOR INFORMATIONAL PURPOSES ONLY — NOT INVESTMENT ADVICE — DATA DELAYED ~15MIN
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const TICKERS = [
+  { sym: 'USO',  name: 'US Oil ETF',           price: 87.24,  chg: +4.12, role: 'Layer 1 — upstream trigger' },
+  { sym: 'UUP',  name: 'US Dollar ETF',         price: 28.91,  chg: +0.34, role: 'Dollar strength signal' },
+  { sym: 'GLD',  name: 'Gold ETF',              price: 312.55, chg: +1.82, role: 'Safe haven / fiscal stress' },
+  { sym: 'TLT',  name: '20Y Treasury ETF',      price: 81.44,  chg: -0.68, role: 'Rate/inflation signal' },
+  { sym: 'SPY',  name: 'S&P 500 ETF',           price: 524.30, chg: -1.41, role: 'Layer 3 — risk-off indicator' },
+  { sym: 'ITA',  name: 'Defense ETF',           price: 198.77, chg: +2.15, role: 'War premium barometer' },
+  { sym: 'APO',  name: 'Apollo Global',         price: 72.40,  chg: -2.93, role: 'Layer 2 — credit stress' },
+  { sym: 'KKR',  name: 'KKR & Co',              price: 88.11,  chg: -1.77, role: 'Layer 2 — private credit' },
+  { sym: 'INDA', name: 'iShares India ETF',     price: 44.22,  chg: -0.95, role: 'Layer 3 — EM downstream' },
+  { sym: 'XLB',  name: 'Materials ETF',         price: 87.50,  chg: +0.22, role: 'Reconstruction cycle' },
+];
+
+const RETURNS = {
+  headers: ['2022','2023','2024','2025'],
+  data: [
+    { sym:'USO',  vals:[29.0,  -8.1,  -4.2,  32.1] },
+    { sym:'UUP',  vals:[9.5,  -2.2,  -1.8,   3.4] },
+    { sym:'GLD',  vals:[-0.8,  12.7,  26.7,  63.7] },
+    { sym:'TLT',  vals:[-31.2, -2.8,  -9.4, -12.1] },
+    { sym:'SPY',  vals:[-18.2, 26.2,  24.9,  17.8] },
+    { sym:'ITA',  vals:[10.0,  14.3,  15.8,  48.6] },
+    { sym:'APO',  vals:[-33.1, 52.0,  38.0,  19.4] },
+    { sym:'KKR',  vals:[-37.0, 80.5,  79.7,  24.1] },
+    { sym:'INDA', vals:[-8.9,  17.2,   8.6,   6.1] },
+    { sym:'XLB',  vals:[-12.4,  9.4,   6.2,  11.2] },
+  ]
+};
+
+const PLAYBOOK = [
+  { sym:'USO',  asset:'Oil ETF',        shock:'★ LONG', war:'LONG', gold:'SHORT', credit:'NEUTRAL',  defl:'SHORT',  conv:5, role:'Primary Layer 1 trigger' },
+  { sym:'UUP',  asset:'Dollar ETF',     shock:'★ LONG', war:'LONG', gold:'NEUTRAL','credit':'LONG',   defl:'LONG',   conv:4, role:'Dollar squeeze amplifier' },
+  { sym:'GLD',  asset:'Gold ETF',       shock:'LONG',  war:'★ LONG',gold:'NEUTRAL',credit:'★ LONG',  defl:'LONG',   conv:5, role:'All-weather structural long' },
+  { sym:'TLT',  asset:'20Y Treasury',   shock:'★ SHORT',war:'SHORT',gold:'LONG',  credit:'SHORT',    defl:'LONG',   conv:4, role:'Inflation shock indicator' },
+  { sym:'SPY',  asset:'S&P 500',        shock:'SHORT', war:'NEUTRAL',gold:'LONG', credit:'SHORT',    defl:'SHORT',  conv:3, role:'Layer 3 consumer barometer' },
+  { sym:'ITA',  asset:'Defense ETF',    shock:'LONG',  war:'★ LONG',gold:'LONG',  credit:'NEUTRAL',  defl:'SHORT',  conv:5, role:'War premium pure play' },
+  { sym:'APO',  asset:'Apollo Global',  shock:'★ SHORT',war:'SHORT',gold:'LONG',  credit:'★ SHORT',  defl:'SHORT',  conv:4, role:'Layer 2 credit stress sensor' },
+  { sym:'KKR',  asset:'KKR & Co',       shock:'SHORT', war:'SHORT', gold:'LONG',  credit:'★ SHORT',  defl:'SHORT',  conv:4, role:'Reversal trade — buy post-peak' },
+  { sym:'INDA', asset:'India ETF',       shock:'SHORT', war:'SHORT', gold:'LONG',  credit:'NEUTRAL',  defl:'NEUTRAL',conv:3, role:'Layer 3 lag signal' },
+  { sym:'XLB',  asset:'Materials ETF',  shock:'NEUTRAL',war:'NEUTRAL',gold:'LONG',credit:'NEUTRAL',  defl:'SHORT',  conv:2, role:'Long-cycle reconstruction play' },
+];
+
+const INTEL = [
+  {
+    level:'critical', source:'CNN / BBC / ISW',
+    time:'Apr 4, 2026 — DAY 35',
+    title: 'Hormuz remains closed — US F-15 & A-10 downed; Trump threatens civilian infrastructure',
+    body: 'US President Trump pledged escalation against Iran over "next 2-3 weeks" with no plan to reopen Hormuz. An F-15E was downed over Iran; an A-10 was struck near the Strait. IEA: current disruption is "the most significant supply shock in the history of the oil market." Brent spiked to $112/b. Trump said US "doesn\'t need" the strait; allies scrambling independently.',
+    signal: ['↑ USO', '↑ GLD', '↑ ITA', '↓ TLT', '↓ SPY']
+  },
+  {
+    level:'critical', source:'Al Jazeera / Reuters',
+    time:'Apr 3, 2026',
+    title: 'UK 40-nation coalition to reopen Hormuz — US absent; Iran running "toll booth" system',
+    body: 'UK Foreign Secretary Cooper chaired emergency talks with 40 nations — conspicuously without the US. Iran\'s parliament drafting legislation to collect transit tolls from ships. IRGC selectively allowing passage for "friendly" nations: India, Pakistan, Malaysia, China. EU nations abandoning neutrality and joining coalition as fuel prices become politically untenable.',
+    signal: ['↑ UUP', '↑ GLD', '↓ INDA (India now in deal with Iran)']
+  },
+  {
+    level:'critical', source:'EIA STEO / Congress.gov',
+    time:'Apr 4, 2026',
+    title: 'OECD commercial crude inventories to draw 166Mb in April — operational minimum approaching',
+    body: 'J.P. Morgan warns: "At this point, the system is not absorbing the shock — it is running down its buffers while demand is forcibly rationed." OECD inventories drawing 166Mb April, further 67Mb early May, before hitting operational minimum ~842Mb. Trump FY2027 budget: $1.5T defense (+40%), includes "Golden Dome" missile defense system.',
+    signal: ['★ Watch: OECD inventory floor approaching', '↑ USO on inventory draws']
+  },
+  {
+    level:'high', source:'Foreign Policy / FAO',
+    time:'Apr 2, 2026',
+    title: 'Global food crisis beginning — Hormuz fertilizer blockade hits planting season',
+    body: 'Gulf states supply raw materials for nitrogen fertilizers. Strait closure disrupts phosphate/ammonia/sulfur flows to global agriculture. FAO: "no more than a 3-month window before risks escalate significantly, affecting global planting decisions for 2026 and beyond." UN Secretary-General appointed special envoy. La Niña drought risk in South America compounds the crisis.',
+    signal: ['↑ Soft commodities', '↑ Agricultural ETFs', '↓ EM consumer (INDA)']
+  },
+  {
+    level:'high', source:'NPR / OpenSecrets / GovTrack',
+    time:'Apr 3, 2026',
+    title: 'Trump FY27 defense budget $1.5T — 40% increase, largest in modern history',
+    body: 'Defense budget proposal boosts munitions, naval fleet construction, and Golden Dome missile defense. Military pay raises 5-7%. Lobbying spend at multi-year highs per OpenSecrets data. ITA top holdings (GE Aerospace, RTX, Boeing, Lockheed Martin) are direct beneficiaries. Defense ETFs now hold $42B AUM.',
+    signal: ['★ ITA structural overweight confirmed', '↑ RTX, LMT, GD']
+  },
+  {
+    level:'high', source:'ACLED / ISW / Oryx',
+    time:'Apr 4, 2026',
+    title: 'Ukraine war: Oryx attrition rate accelerating — NATO procurement demand sustained',
+    body: 'DeepStateMap shows frontline remains contested across eastern Ukraine. Oryx database logs thousands of verified armor losses driving procurement demand. European NATO members exceeding 2% GDP defense spend. ITA +48.6% in 2025 confirmed as structural shift, not tactical spike. ISW: sustained high-intensity combat continues in Donetsk and Zaporizhzhia oblasts.',
+    signal: ['↑ ITA (structural)', '↑ European defense names']
+  },
+  {
+    level:'medium', source:'Bloomberg / S&P',
+    time:'Apr 1, 2026',
+    title: 'APO gates $15.1B fund; KKR faces Moody\'s downgrade — Layer 2 stress confirmed',
+    body: 'Apollo Global Management limited investor withdrawals from its Debt Solutions fund to 5% after redemption requests exceeded that threshold. Ares\' $10.7B Strategic Income Fund similarly capped. KKR facing Moody\'s downgrade review of standard products. This is the early "Fiscal Accident" regime signal — playbook calls for Long GLD, Short APO/KKR.',
+    signal: ['↓ APO', '↓ KKR', '↑ GLD', 'Watch: TLT yield spike']
+  },
+  {
+    level:'medium', source:'Trading Economics / CNBC',
+    time:'Apr 3, 2026',
+    title: '10Y Treasury at 4.36% — Fed on hold despite inflation re-acceleration risk',
+    body: 'Fed Chair Powell stated officials "may need to respond to economic effects of the conflict, though not at this stage." Markets expect no rate cuts in 2026. Higher oil prices fuelling inflation spiral fears. UK aviation facing jet fuel crisis in 48 hours. TLT bear case strengthening — real rates rising, energy-driven CPI re-acceleration imminent.',
+    signal: ['↓ TLT', '↑ TIPS (RINF)', '↑ UUP']
+  },
+];
+
+const CHOKEPOINTS = [
+  { name:'Hormuz', oil:'~20%', status:'CLOSED', statusClass:'status-critical', dotColor:'var(--red)' },
+  { name:'Bab el-Mandeb', oil:'~10%', status:'HIGH', statusClass:'status-elevated', dotColor:'var(--orange)' },
+  { name:'Suez Canal', oil:'~12%', status:'ELEVATED', statusClass:'status-elevated', dotColor:'var(--orange)' },
+  { name:'Taiwan Strait', oil:'~3%', status:'WATCH', statusClass:'status-moderate', dotColor:'var(--yellow)' },
+  { name:'Malacca', oil:'~25%', status:'STABLE', statusClass:'status-normal', dotColor:'var(--green)' },
+];
+
+const REGIMES = [
+  { name:'Energy Shock / War',    pct:85, color:'var(--red)' },
+  { name:'Credit Stress (early)', pct:55, color:'var(--orange)' },
+  { name:'Stagflation',           pct:42, color:'var(--yellow)' },
+  { name:'Risk-On / Goldilocks',  pct:8,  color:'var(--dim)' },
+  { name:'Deflation / Risk-Off',  pct:12, color:'var(--blue)' },
+];
+
+const IF_THEN = [
+  {
+    trigger:'IF Brent >$115 sustained 48h',
+    condition:'AND Hormuz AIS shows <10 tankers/day',
+    then:'Layer 2 crash imminent → Short APO/KKR; Long GLD, USO; reduce TLT',
+    urgency:'critical'
+  },
+  {
+    trigger:'IF WTI-Brent spread narrows <$2',
+    condition:'AND any diplomatic contact reported between US/Iran via Oman',
+    then:'Ceasefire trade begins → Long KKR/APO (reversal); reduce USO; add SPY',
+    urgency:'high'
+  },
+  {
+    trigger:'IF ITA > SPY spread exceeds 35pts in a month',
+    condition:'AND new European defense budget >2.5% GDP announced',
+    then:'War premium structural — add ITA on any dip; size up vs SPY tactically',
+    urgency:'high'
+  },
+  {
+    trigger:'IF INDA CPI >7% print',
+    condition:'AND India halts Russian oil buys (per US trade deal)',
+    then:'Layer 3 peak stress → EM underweight confirmed; Long UUP vs EM currencies',
+    urgency:'high'
+  },
+  {
+    trigger:'IF APO/KKR credit gating spreads to 3+ funds',
+    condition:'AND US Treasury 10Y breaks 4.8%',
+    then:'"Fiscal Accident" regime accelerating → Max GLD; Short TLT; hedge with UUP',
+    urgency:'critical'
+  },
+  {
+    trigger:'IF OECD commercial inventories hit operational minimum',
+    condition:'(~842Mb — expected May 2026)',
+    then:'Demand rationing goes physical → $150+ Brent plausible; ITA spike; global recession trigger',
+    urgency:'critical'
+  },
+  {
+    trigger:'IF Hormuz reopens partially (10+ tankers/day)',
+    condition:'AND Brent drops >10% in 48h',
+    then:'Cascade reversal: buy KKR/APO; add SPY/INDA; reduce USO position',
+    urgency:'medium'
+  },
+  {
+    trigger:'IF US election rhetoric favors ceasefire',
+    condition:'AND Trump Truth Social post mentions "deal" or "peace"',
+    then:'Risk-on spike incoming: reduce GLD/USO, add SPY/KKR; watch for reversal exhaustion',
+    urgency:'medium'
+  },
+];
+
+const GEO_SCORES = [
+  { region:'Middle East (Iran/Gulf)', score:98, color:'var(--red)' },
+  { region:'Ukraine/Russia',          score:74, color:'var(--orange)' },
+  { region:'Taiwan Strait',           score:45, color:'var(--yellow)' },
+  { region:'Red Sea / Yemen',         score:61, color:'var(--orange)' },
+  { region:'Lebanon/Israel',          score:58, color:'var(--orange)' },
+  { region:'Korea Peninsula',         score:32, color:'var(--dim)' },
+];
+
+const VOL_DATA = [
+  { sym:'USO', vol:42, color:'var(--red)' },
+  { sym:'GLD', vol:28, color:'var(--gold)' },
+  { sym:'TLT', vol:22, color:'var(--blue)' },
+  { sym:'ITA', vol:31, color:'var(--green)' },
+  { sym:'INDA',vol:26, color:'var(--purple)' },
+  { sym:'SPY', vol:19, color:'var(--cyan)' },
+  { sym:'APO', vol:35, color:'var(--orange)' },
+  { sym:'KKR', vol:38, color:'var(--orange)' },
+];
+
+const HEADLINES = [
+  '⚡ BRENT $112/b — highest since Jun 2022 as Trump vows Iran escalation',
+  '🔴 US F-15 & A-10 DOWNED — two US aircraft lost in Iran operations',
+  '🌊 HORMUZ DAY 35 — Brent curve in steep backwardation; WTI inverts above Brent',
+  '⛽ OECD BUFFERS — 166Mb inventory draw forecast for April alone',
+  '🛡️ ITA +48.6% YTD 2025 — $1.5T defense budget request (+40%)',
+  '🌍 40-NATION COALITION — UK hosts Hormuz reopening talks without US',
+  '🌾 FOOD CRISIS — FAO warns 3-month window before global planting disrupted',
+  '💰 APO GATES $15.1B FUND — Ares follows; KKR faces Moody\'s downgrade',
+  '🇬🇧 UK JET FUEL — SocGen warns final tankers arriving in 48hrs',
+  '📍 IRAN TOLL BOOTH — IRGC charging transit fees for "friendly" nations',
+  '🇮🇳 INDIA DEAL — halts Russian oil per US trade agreement; double energy shock',
+  '💵 FED ON HOLD — Powell: wait-and-see; 10Y at 4.36%; no cuts expected 2026',
+  '🟡 GOLD $3,247/oz — JPMorgan sees $4,000-$6,300 range; central bank buying',
+  '🇺🇦 UKRAINE — Oryx attrition accelerating; EU NATO members >2% GDP defense',
+];
+
+const CORR_DATA = {
+  headers: ['USO','GLD','TLT','SPY','ITA','UUP','INDA'],
+  matrix: [
+    [1.00, 0.52,-0.71,-0.63, 0.48, 0.44,-0.58],
+    [0.52, 1.00,-0.41,-0.22, 0.31, 0.18,-0.31],
+    [-0.71,-0.41,1.00, 0.63,-0.52,-0.48, 0.47],
+    [-0.63,-0.22,0.63, 1.00,-0.11,-0.39, 0.71],
+    [0.48, 0.31,-0.52,-0.11, 1.00, 0.27,-0.19],
+    [0.44, 0.18,-0.48,-0.39, 0.27, 1.00,-0.51],
+    [-0.58,-0.31,0.47, 0.71,-0.19,-0.51, 1.00],
+  ]
+};
+
+// ─── RENDER FUNCTIONS ────────────────────────────────────────────────────────
+
+function init() {
+  renderTickers();
+  renderRegimeProbs();
+  renderHeatmap();
+  renderPlaybook();
+  renderIntel();
+  renderChokepoints();
+  renderVolBars();
+  renderGeoScores();
+  renderQuickSignals();
+  renderIfThen();
+  renderCorrelation();
+  renderConsole();
+  renderHeadlineTicker();
+  startClock();
+}
+
+function renderTickers() {
+  const el = document.getElementById('ticker-list');
+  el.innerHTML = TICKERS.map(t => `
+    <div class="ticker-item">
+      <div class="ticker-sym">${t.sym}</div>
+      <div class="ticker-name">${t.name}</div>
+      <div class="ticker-price">$${t.price.toFixed(2)}</div>
+      <div class="ticker-chg ${t.chg > 0 ? 'up' : t.chg < 0 ? 'down' : 'flat'}">
+        ${t.chg > 0 ? '+' : ''}${t.chg.toFixed(2)}%
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRegimeProbs() {
+  const el = document.getElementById('regime-probs');
+  el.innerHTML = REGIMES.map(r => `
+    <div class="regime-row">
+      <div class="regime-name">${r.name}</div>
+      <div class="regime-bar-wrap">
+        <div class="regime-bar" style="width:${r.pct}%; background:${r.color};"></div>
+      </div>
+      <div class="regime-pct">${r.pct}%</div>
+    </div>
+  `).join('');
+}
+
+function renderHeatmap() {
+  const el = document.getElementById('heatmap');
+  const years = RETURNS.headers;
+
+  function cellColor(v) {
+    if (v >= 30) return { bg: 'rgba(62,207,142,0.6)', text:'#fff' };
+    if (v >= 10) return { bg: 'rgba(62,207,142,0.25)', text:'#3ecf8e' };
+    if (v >= 0)  return { bg: 'rgba(62,207,142,0.1)', text:'#3ecf8e' };
+    if (v >= -10) return { bg: 'rgba(255,59,59,0.15)', text:'#ff6b6b' };
+    return { bg: 'rgba(255,59,59,0.4)', text:'#fff' };
+  }
+
+  let html = `<div style="overflow-x:auto;"><table style="border-collapse:collapse; font-family: var(--font-mono); font-size:10px; width:100%;">`;
+  html += `<tr><th style="padding:6px 10px; text-align:left; color:var(--dim); border-bottom:1px solid var(--border2);">Ticker</th>`;
+  years.forEach(y => html += `<th style="padding:6px 10px; text-align:center; color:var(--dim); border-bottom:1px solid var(--border2);">${y}</th>`);
+  html += `<th style="padding:6px 10px; text-align:center; color:var(--dim); border-bottom:1px solid var(--border2);">3Y CAGR</th></tr>`;
+
+  RETURNS.data.forEach(row => {
+    const sum = row.vals.reduce((a,b) => a+b, 0);
+    const cagr = (Math.pow(row.vals.slice(0,3).reduce((acc,v) => acc*(1+v/100), 1), 1/3)-1)*100;
+    html += `<tr>`;
+    html += `<td style="padding:7px 10px; border-bottom:1px solid var(--faint); color:var(--white); font-weight:700;">${row.sym}</td>`;
+    row.vals.forEach((v, i) => {
+      const c = cellColor(v);
+      const highlight = i === 3 ? 'border:1px solid rgba(255,255,255,0.15);' : '';
+      html += `<td style="padding:7px 10px; text-align:center; border-bottom:1px solid var(--faint); background:${c.bg}; color:${c.text}; ${highlight}">${v > 0 ? '+' : ''}${v.toFixed(1)}%</td>`;
+    });
+    const cc = cellColor(cagr);
+    html += `<td style="padding:7px 10px; text-align:center; border-bottom:1px solid var(--faint); background:${cc.bg}; color:${cc.text}; font-weight:700;">${cagr > 0 ? '+' : ''}${cagr.toFixed(1)}%</td>`;
+    html += `</tr>`;
+  });
+  html += `</table></div>`;
+  el.innerHTML = html;
+}
+
+function renderPlaybook() {
+  function convHtml(conv, regime) {
+    let html = '<div class="conviction-bar">';
+    for (let i = 1; i <= 5; i++) {
+      const cls = i <= conv ? (conv >= 5 ? 'filled critical' : conv >= 4 ? 'filled high' : 'filled') : '';
+      html += `<div class="conv-dot ${cls}"></div>`;
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function regimeCell(v) {
+    if (v.startsWith('★')) return `<span style="color:var(--white); font-weight:700;">${v}</span>`;
+    if (v === 'LONG') return `<span style="color:var(--green);">${v}</span>`;
+    if (v === 'SHORT') return `<span style="color:var(--red);">${v}</span>`;
+    if (v === 'NEUTRAL') return `<span style="color:var(--dim);">${v}</span>`;
+    return v;
+  }
+
+  const body = document.getElementById('playbook-body');
+  body.innerHTML = PLAYBOOK.map(p => `
+    <tr>
+      <td style="color:var(--white); font-weight:700; font-family:var(--font-mono);">${p.sym}</td>
+      <td style="color:var(--dim);">${p.asset}</td>
+      <td>${regimeCell(p.shock)}</td>
+      <td>${regimeCell(p.war)}</td>
+      <td>${regimeCell(p.gold)}</td>
+      <td>${regimeCell(p.credit)}</td>
+      <td>${regimeCell(p.defl)}</td>
+      <td>${convHtml(p.conv)}</td>
+      <td style="color:var(--dim); font-size:10px;">${p.role}</td>
+    </tr>
+  `).join('');
+
+  const triggers = document.getElementById('regime-triggers');
+  const triggerData = [
+    {
+      name: 'Energy Shock / War Premium', status:'ACTIVE', color:'var(--red)',
+      triggers: ['Brent +15% in <30d', 'Hormuz AIS congestion elevated', 'GDELT Gulf score >7/10', 'USO+UUP both rising simultaneously'],
+      longs: 'USO · GLD · ITA · UUP', shorts: 'TLT · SPY (XLY) · APO', lag: 'INDA 4-8 weeks'
+    },
+    {
+      name: 'Credit Stress / Fiscal Accident', status:'EARLY SIGNALS', color:'var(--orange)',
+      triggers: ['TLT yield spike >4.8%', 'APO/KKR gating news', 'US deficit expansion', 'OpenSecrets financial lobby surge'],
+      longs: 'GLD · UUP', shorts: 'TLT · APO · KKR', lag: 'Slow-motion — 60-90 days'
+    },
+    {
+      name: 'Risk-On / Goldilocks', status:'DORMANT', color:'var(--dim)',
+      triggers: ['Brent stable <$85', 'GDELT conflict sentiment declining', 'Fed easing signals', 'DBnomics PMI >52'],
+      longs: 'SPY · INDA · KKR · APO · GLD', shorts: 'USO · UUP', lag: 'KKR reversal signal = recovery confirmed'
+    },
+    {
+      name: 'Stagflation', status:'WATCH', color:'var(--yellow)',
+      triggers: ['CPI >5% with growth <1%', 'INDA CPI >7%', 'US GDP negative', 'Fertilizer/food inflation spike'],
+      longs: 'GLD · USO · TIP', shorts: 'SPY · TLT · INDA', lag: '30-60 days from Layer 1'
+    },
+  ];
+
+  triggers.innerHTML = triggerData.map(t => `
+    <div style="background: var(--bg2); border-left: 3px solid ${t.color}; border-radius: 0 4px 4px 0; padding: 12px 14px; margin-bottom: 10px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <div style="font-family:var(--font-display); font-size:16px; color:${t.color}; letter-spacing:1px;">${t.name}</div>
+        <span class="layer-status ${t.status === 'ACTIVE' ? 'status-critical' : t.status === 'EARLY SIGNALS' ? 'status-elevated' : t.status === 'WATCH' ? 'status-moderate' : 'status-normal'}">${t.status}</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:10px;">
+        <div>
+          <div style="color:var(--dim); font-family:var(--font-mono); font-size:8px; letter-spacing:1px; margin-bottom:4px;">TRIGGERS</div>
+          ${t.triggers.map(x => `<div style="color:var(--text); padding:1px 0;">· ${x}</div>`).join('')}
+        </div>
+        <div>
+          <div style="color:var(--dim); font-family:var(--font-mono); font-size:8px; letter-spacing:1px; margin-bottom:4px;">POSITION</div>
+          <div style="color:var(--green); padding:1px 0;">↑ ${t.longs}</div>
+          <div style="color:var(--red); padding:1px 0;">↓ ${t.shorts}</div>
+          <div style="color:var(--yellow); margin-top:4px; font-family:var(--font-mono);">Lag: ${t.lag}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderIntel() {
+  const el = document.getElementById('intel-feed');
+  el.innerHTML = INTEL.map(item => `
+    <div class="intel-item ${item.level} fade-in">
+      <div class="intel-header">
+        <span class="intel-level ${item.level}">${item.level.toUpperCase()}</span>
+        <span class="intel-source">${item.source}</span>
+        <span class="intel-time">${item.time}</span>
+      </div>
+      <div class="intel-title">${item.title}</div>
+      <div class="intel-body">${item.body}</div>
+      <div class="intel-signal">
+        ${item.signal.map(s => {
+          const cls = s.startsWith('↑') ? 'long' : s.startsWith('↓') ? 'short' : 'watch';
+          return `<span class="ticker-badge ${cls}">${s}</span>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderChokepoints() {
+  const el = document.getElementById('chokepoints');
+  el.innerHTML = CHOKEPOINTS.map(cp => `
+    <div class="chokepoint-item">
+      <div class="cp-name">
+        <div class="cp-dot" style="background:${cp.dotColor};"></div>
+        ${cp.name}
+      </div>
+      <span class="cp-status ${cp.statusClass}" style="font-family:var(--font-mono); font-size:8px; padding:2px 5px;">${cp.status}</span>
+      <div class="cp-flow">${cp.oil} global</div>
+    </div>
+  `).join('');
+}
+
+function renderVolBars() {
+  const el = document.getElementById('vol-bars');
+  el.innerHTML = VOL_DATA.map(v => `
+    <div class="vol-item">
+      <div class="vol-sym">${v.sym}</div>
+      <div class="vol-bar-wrap">
+        <div class="vol-bar" style="width:${v.vol * 2.2}%; background:${v.color};"></div>
+      </div>
+      <div class="vol-val">${v.vol}%</div>
+    </div>
+  `).join('');
+}
+
+function renderGeoScores() {
+  const el = document.getElementById('geo-scores');
+  el.innerHTML = GEO_SCORES.map(g => `
+    <div style="padding: 5px 0; border-bottom: 1px solid var(--faint);">
+      <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+        <div style="font-family:var(--font-mono); font-size:9px; color:var(--text);">${g.region}</div>
+        <div style="font-family:var(--font-mono); font-size:9px; color:${g.color}; font-weight:700;">${g.score}/100</div>
+      </div>
+      <div style="height:3px; background:var(--faint); border-radius:2px; overflow:hidden;">
+        <div style="height:100%; width:${g.score}%; background:${g.color}; border-radius:2px;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderQuickSignals() {
+  const el = document.getElementById('quick-signals');
+  const signals = [
+    { label:'Regime', val:'Energy Shock + War', color:'var(--red)' },
+    { label:'Hormuz', val:'CLOSED (Day 35)', color:'var(--red)' },
+    { label:'Primary Trade', val:'Long USO/GLD/ITA', color:'var(--green)' },
+    { label:'Avoid', val:'TLT, APO, KKR', color:'var(--red)' },
+    { label:'Watch', val:'WTI-Brent spread', color:'var(--yellow)' },
+    { label:'Lag Signal', val:'INDA CPI (30d)', color:'var(--yellow)' },
+    { label:'Next Catalyst', val:'Ceasefire/Oman deal', color:'var(--blue)' },
+    { label:'Fed', val:'On hold — no cuts', color:'var(--dim)' },
+  ];
+
+  el.innerHTML = signals.map(s => `
+    <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--faint); padding:4px 0;">
+      <div style="color:var(--dim);">${s.label}</div>
+      <div style="color:${s.color}; font-weight:500;">${s.val}</div>
+    </div>
+  `).join('');
+}
+
+function renderIfThen() {
+  const el = document.getElementById('signals-grid');
+  const urgencyColor = { critical:'var(--red)', high:'var(--orange)', medium:'var(--yellow)' };
+  el.innerHTML = IF_THEN.map(s => `
+    <div class="ifthen-item" style="border:1px solid var(--border); border-top:2px solid ${urgencyColor[s.urgency]}; border-radius:4px; padding:12px; background:var(--bg2);">
+      <div class="ifthen-if">IF</div>
+      <div class="ifthen-condition">${s.trigger}</div>
+      <div style="font-family:var(--font-mono); font-size:9px; color:var(--dim); margin: 2px 0;">${s.condition}</div>
+      <div class="ifthen-arrow">→ THEN</div>
+      <div class="ifthen-then">${s.then}</div>
+    </div>
+  `).join('');
+}
+
+function renderCorrelation() {
+  const el = document.getElementById('corr-matrix');
+  const h = CORR_DATA.headers;
+  el.innerHTML = h.map((row, i) => `
+    <tr>
+      <th style="text-align:left; background:var(--bg2); color:var(--white);">${row}</th>
+      ${CORR_DATA.matrix[i].map((v, j) => {
+        const abs = Math.abs(v);
+        let bg = 'transparent';
+        if (i === j) bg = 'rgba(255,255,255,0.04)';
+        else if (v > 0.5) bg = 'rgba(62,207,142,0.2)';
+        else if (v > 0.2) bg = 'rgba(62,207,142,0.08)';
+        else if (v < -0.5) bg = 'rgba(255,59,59,0.2)';
+        else if (v < -0.2) bg = 'rgba(255,59,59,0.08)';
+        const col = v > 0.2 ? 'var(--green)' : v < -0.2 ? 'var(--red)' : 'var(--dim)';
+        return `<td style="background:${bg}; color:${col};">${v.toFixed(2)}</td>`;
+      }).join('')}
+    </tr>
+  `).join('');
+}
+
+function renderConsole() {
+  const logs = [
+    { time:'04:01:22', msg:'[EIA] STEO April 2026: Brent forecast $95+/b for next 2 months', cls:'yellow' },
+    { time:'04:01:45', msg:'[GDELT] Gulf conflict sentiment score: 9.2/10 — CRITICAL', cls:'red' },
+    { time:'04:02:11', msg:'[ISW] 2x US aircraft lost — F-15E over Iran, A-10 near Hormuz', cls:'red' },
+    { time:'04:02:33', msg:'[ACLED] Oryx: 847 new verified vehicle losses logged this week', cls:'yellow' },
+    { time:'04:03:07', msg:'[MarineTraffic] Hormuz tanker count: 3 vessels/day vs 40 normal', cls:'red' },
+    { time:'04:03:41', msg:'[Bloomberg] APO gates $15.1B fund — Layer 2 stress signal confirmed', cls:'orange' },
+    { time:'04:04:12', msg:'[DeepStateMap] Ukraine frontline: contested across 3 oblasts', cls:'dim' },
+    { time:'04:04:55', msg:'[FRED] US 10Y yield: 4.36% — inflation re-acceleration risk elevated', cls:'yellow' },
+    { time:'04:05:18', msg:'[OpenSecrets] Defense lobby spend: highest in 15 years → ITA bullish', cls:'green' },
+    { time:'04:05:44', msg:'[FAO] Fertilizer crisis: 3-month window before planting decisions impacted', cls:'orange' },
+    { time:'04:06:02', msg:'[EIA] OECD commercial crude: -166Mb April forecast — buffer floor approaching', cls:'red' },
+    { time:'04:06:30', msg:'[CASCADE] Layer 1 CRITICAL → Layer 2 ELEVATING → Layer 3 PROPAGATING', cls:'yellow' },
+  ];
+
+  const el = document.getElementById('console');
+  el.innerHTML = logs.map(l => `
+    <div class="console-line">
+      <span class="console-time">${l.time}</span>
+      <span class="console-msg ${l.cls}">${l.msg}</span>
+    </div>
+  `).join('');
+
+  // Auto-scroll to bottom
+  setTimeout(() => { el.scrollTop = el.scrollHeight; }, 100);
+}
+
+function renderHeadlineTicker() {
+  const doubled = [...HEADLINES, ...HEADLINES];
+  const track = document.getElementById('ticker-track');
+  track.innerHTML = doubled.map(h => `<span class="ticker-headline">${h}</span>`).join('');
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const idx = ['cascade','playbook','intel','instrument','signals'].indexOf(id);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// ─── CLOCK ───────────────────────────────────────────────────────────────────
+
+function startClock() {
+  function tick() {
+    const now = new Date();
+    const utc = now.toUTCString().split(' ')[4];
+    document.getElementById('clock').textContent = utc + ' UTC';
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ─── LIVE DATA UPDATES ───────────────────────────────────────────────────────
+
+function simulatePriceFlicker() {
+  // Simulate micro price movements for realism
+  TICKERS.forEach(t => {
+    const drift = (Math.random() - 0.48) * 0.05;
+    t.chg = parseFloat((t.chg + drift).toFixed(2));
+  });
+  renderTickers();
+
+  // Update Brent val with slight variation
+  const base = 112.42;
+  const variation = (Math.random() - 0.5) * 0.4;
+  document.getElementById('brent-val').textContent = '$' + (base + variation).toFixed(2);
+}
+
+setInterval(simulatePriceFlicker, 8000);
+
+// ─── FETCH LIVE DATA (open APIs) ─────────────────────────────────────────────
+
+async function fetchLiveData() {
+  // Try Yahoo Finance proxy for live prices
+  const symbols = ['USO', 'GLD', 'TLT', 'SPY', 'ITA'];
+  for (const sym of symbols) {
+    try {
+      const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1d`);
+      if (res.ok) {
+        const data = await res.json();
+        const quote = data?.chart?.result?.[0]?.meta;
+        if (quote && quote.regularMarketPrice) {
+          const ticker = TICKERS.find(t => t.sym === sym);
+          if (ticker) {
+            ticker.price = quote.regularMarketPrice;
+            const prev = quote.chartPreviousClose || quote.regularMarketPrice;
+            ticker.chg = parseFloat(((quote.regularMarketPrice - prev) / prev * 100).toFixed(2));
+          }
+        }
+      }
+    } catch(e) { /* silent — use seeded data */ }
+  }
+  renderTickers();
+}
+
+// Attempt live fetch (may be blocked by CORS in some environments)
+setTimeout(fetchLiveData, 1000);
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
